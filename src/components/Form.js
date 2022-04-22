@@ -22,6 +22,7 @@ const Form = () => {
         autoFocus
         onChange={(e) => setTitle(e.target.value)}
         value={title}
+        required
       />
     </form>
   );

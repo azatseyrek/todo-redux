@@ -1,10 +1,22 @@
-import {createSlice, nanoid} from '@reduxjs/toolkit';
+import {createAsyncThunk, createSlice, nanoid} from '@reduxjs/toolkit';
+
+const fetchTodos = async () => {
+  const res = await fetch('http://localhost:8000/todos');
+  return await res.json();
+};
+
+export const getTodosAsync = createAsyncThunk(
+  'todos/getTodosAsync',
+  fetchTodos,
+);
 
 export const todosSlice = createSlice({
   name: 'todos',
   initialState: {
     items: [],
     activeFilter: 'all',
+    isLoading: false,
+    error: null,
   },
   reducers: {
     addTodo: (state, action) => {
@@ -33,6 +45,19 @@ export const todosSlice = createSlice({
       const myArr = state.items;
       const filtered = myArr.filter((todo) => todo.completed === false);
       state.items = filtered;
+    },
+  },
+  extraReducers: {
+    [getTodosAsync.pending]: (state, action) => {
+      state.isLoading = true;
+    },
+    [getTodosAsync.fulfilled]: (state, action) => {
+      state.items = action.payload;
+      state.isLoading = false;
+    },
+    [getTodosAsync.rejected]: (state, action) => {
+      state.isLoading = false;
+      state.error = action.error.message || 'Can not reach the backend data';
     },
   },
 });

@@ -1,12 +1,17 @@
 import React from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {toggle, deleteTodo} from '../redux/todos/todosSlice';
+import {
+  toggle,
+  deleteTodo,
+  selectTodos,
+  selectFilter,
+} from '../redux/todos/todosSlice';
 
 let filtered = [];
 
 const TodoList = () => {
-  const items = useSelector((state) => state.todos.items);
-  const activeFilter = useSelector((state) => state.todos.activeFilter);
+  const items = useSelector(selectTodos);
+  const activeFilter = useSelector(selectFilter);
   const dispatch = useDispatch();
 
   console.log(items);
